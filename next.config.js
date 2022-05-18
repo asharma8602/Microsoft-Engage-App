@@ -2,7 +2,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ['image.tmdb.org'],
+    domains: ['image.tmdb.org','help.nflxext.com'],
   },
   plugins: [
     require('tailwindcss-textshadow'),

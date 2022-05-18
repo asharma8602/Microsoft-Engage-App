@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useEffect, useState } from 'react';
 import { BiSearch,BiBell } from "react-icons/bi";
+import useAuth from "../hooks/useAuth";
 
 function Header() {
 
-    const [isScrolled, setIsScrolled] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const { logout } = useAuth
 
     useEffect(() => {
         const handleScroll = () => {
@@ -46,6 +48,7 @@ function Header() {
                         src="https://rb.gy/g1pwyx"
                         alt=""
                         className="cursor-pointer rounded"
+                        onClick={logout}
                     />
                 </Link>
                 <BiBell className="h-6 w-6"/>

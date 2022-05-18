@@ -3,7 +3,9 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { baseUrl } from '../constants/movie'
 import { FiPlay } from 'react-icons/fi'
-import { BiTimeFive } from 'react-icons/bi'
+import { BiInfoCircle} from 'react-icons/bi'
+import { modalState, movieState } from '../atoms/modalAtom'
+import { useRecoilState } from 'recoil'
 
 interface Props {
   netflixOriginals: Movie[]
@@ -11,6 +13,8 @@ interface Props {
 
 function Banner({ netflixOriginals }: Props) {
   const [movie, setMovie] = useState<Movie | null>(null)
+  const [currentMovie, setCurrentMovie] = useRecoilState(movieState)
+  const [showModal, setShowModal] = useRecoilState(modalState)
 
   useEffect(() => {
     setMovie(
@@ -39,9 +43,14 @@ function Banner({ netflixOriginals }: Props) {
           <FiPlay />
           Play
         </button>
-        <button className="bannerButton bg-[gray]/70">
-          <BiTimeFive />
-          Watch Later
+        <button
+          className="bannerButton bg-[gray]/70"
+          onClick={() => {
+            setCurrentMovie(movie)
+            setShowModal(true)
+          }}>
+          <BiInfoCircle className="h-5 w-5 md:h-8 md:w-8" />
+          More Info
         </button>
       </div>
     </div>
