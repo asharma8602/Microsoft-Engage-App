@@ -12,6 +12,7 @@ function Header() {
 
   useEffect(() => {
     const onOutsideClick = (e: any) =>
+      // @ts-ignore
       (searchRef.current && searchRef.current.contains(e.target)) ||
       setIsActive(false)
 
