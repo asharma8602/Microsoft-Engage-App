@@ -1,21 +1,43 @@
 import MuiModal from '@mui/material/Modal'
 import { useEffect, useState } from 'react'
-import { BiVolumeFull, BiVolumeMute, BiX } from 'react-icons/bi'
+import { BiCheck, BiVolumeFull, BiVolumeMute, BiX } from 'react-icons/bi'
 import ReactPlayer from 'react-player/lazy'
 import { useRecoilState } from 'recoil'
 import { modalState, movieState } from '../atoms/modalAtom'
-import { Element, Genre } from '../typings'
+import { Element, Genre, Movie } from '../typings'
 import { FiPlay, FiPlus } from 'react-icons/fi'
-import { BsFillHandThumbsUpFill } from 'react-icons/bs'
+import { BsFillHandThumbsUpFill, BsHandThumbsUp } from 'react-icons/bs'
+import {
+  collection,
+  deleteDoc,
+  doc,
+  DocumentData,
+  onSnapshot,
+  setDoc,
+} from 'firebase/firestore'
+import useAuth from '../hooks/useAuth'
+import toast, { Toaster } from 'react-hot-toast'
+import { db } from '../firebase'
 
 function Modal() {
   const [showModal, setShowModal] = useRecoilState(modalState)
   const [movie, setMovie] = useRecoilState(movieState)
   const [trailer, setTrailer] = useState('')
   const [genres, setGenres] = useState<Genre[]>([])
+  const [addedToList, setAddedToList] = useState(false)
+  const [addedToFavourites, setAddedToFavourites] = useState(false)
   const [muted, setMuted] = useState(true)
-  const handleClose = () => {
-    setShowModal(false)
+  const [movies, setMovies] = useState<DocumentData[] | Movie[]>([])
+  const [favourites,setFavourites]=useState<DocumentData[] | Movie[]>([])
+  const { user } = useAuth()
+  const toastStyle = {
+    background: 'white',
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    padding: '15px',
+    borderRadius: '9999px',
+    maxWidth: '1000px',
   }
   useEffect(() => {
     if (!movie) return
@@ -43,6 +65,102 @@ function Modal() {
 
     fetchMovie()
   }, [movie])
+  const handleClose = () => {
+    setShowModal(false)
+    setMovie(null)
+    toast.dismiss()
+  }
+  useEffect(() => {
+    if (user) {
+      return onSnapshot(
+        collection(db, 'customers', user.uid, 'myList'),
+        (snapshot) => setMovies(snapshot.docs)
+      )
+    }
+  }, [db, movie?.id])
+  useEffect(() => {
+    if (user) {
+      return onSnapshot(
+        collection(db, 'customers', user.uid, 'myFavourites'),
+        (snapshot) => setFavourites(snapshot.docs)
+      )
+    }
+  }, [db, movie?.id])
+  useEffect(
+    () =>
+      setAddedToList(
+        movies.findIndex((result) => result.data().id === movie?.id) !== -1
+      ),
+    [movies]
+  )
+  useEffect(
+    () =>
+      setAddedToFavourites(
+        favourites.findIndex((result) => result.data().id === movie?.id) !== -1
+      ),
+    [favourites]
+  )
+  const handleList = async () => {
+    if (addedToList) {
+      await deleteDoc(
+        doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!)
+      )
+
+      toast(
+        `${movie?.title || movie?.original_name} has been removed from My List`,
+        {
+          duration: 8000,
+          style: toastStyle,
+        }
+      )
+    } else {
+      await setDoc(
+        doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!),
+        {
+          ...movie,
+        }
+      )
+
+      toast(
+        `${movie?.title || movie?.original_name} has been added to My List.`,
+        {
+          duration: 8000,
+          style: toastStyle,
+        }
+      )
+    }
+  }
+  const handleFavourites = async () => {
+    if (addedToFavourites) {
+      await deleteDoc(
+        doc(db, 'customers', user!.uid, 'myFavourites', movie?.id.toString()!)
+      )
+
+      toast(
+        `${movie?.title || movie?.original_name} has been removed from My Favourites`,
+        {
+          duration: 8000,
+          style: toastStyle,
+        }
+      )
+    } else {
+      await setDoc(
+        doc(db, 'customers', user!.uid, 'myFavourites', movie?.id.toString()!),
+        {
+          ...movie,
+        }
+      )
+
+      toast(
+        `${movie?.title || movie?.original_name} has been added to My Favourites.`,
+        {
+          duration: 8000,
+          style: toastStyle,
+        }
+      )
+    }
+  }
+  console.log(addedToList)
   return (
     <MuiModal
       open={showModal}
@@ -50,6 +168,7 @@ function Modal() {
       className="no-scrollbar fixed !top-7 left-0 right-0 z-50 mx-auto w-full max-w-5xl overflow-hidden overflow-y-scroll rounded-md"
     >
       <>
+      <Toaster position="bottom-center" />
         <button
           className="modalButton absolute right-5 top-5 !z-40 h-9 w-9 border-none bg-[#181818] hover:bg-[#181818]"
           onClick={handleClose}
@@ -72,11 +191,19 @@ function Modal() {
                 <FiPlay className="h-6 w-6 text-black" />
                 Play
               </button>
-              <button className="modalButton">
-                <FiPlus className="h-7 w-7" />
+              <button className="modalButton" onClick={handleList}>
+                {addedToList ? (
+                  <BiCheck className="h-7 w-7" />
+                ) : (
+                  <FiPlus className="h-7 w-7" />
+                )}
               </button>
-              <button className="modalButton">
-                <BsFillHandThumbsUpFill className="h-7 w-7" />
+              <button className="modalButton" onClick={handleFavourites}>
+              {addedToFavourites ? (
+                  <BsFillHandThumbsUpFill className="h-7 w-7" />
+                ) : (
+                  <BsHandThumbsUp className="h-7 w-7" />
+                )}
               </button>
             </div>
             <button className="modalButton" onClick={() => setMuted(!muted)}>

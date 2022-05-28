@@ -3,6 +3,13 @@ export interface Genre {
     name: string
   }
   
+export interface Recommendation {
+  data: any
+  Genres: string[]
+  Movie_Id: number
+  Name : string
+}
+
 export interface Movie {
     title: string
     backdrop_path: string

@@ -8,19 +8,19 @@ import { modalState, movieState } from '../atoms/modalAtom'
 import { useRecoilState } from 'recoil'
 
 interface Props {
-  netflixOriginals: Movie[]
+  movies: Movie[]
 }
 
-function Banner({ netflixOriginals }: Props) {
+function Banner({ movies }: Props) {
   const [movie, setMovie] = useState<Movie | null>(null)
   const [currentMovie, setCurrentMovie] = useRecoilState(movieState)
   const [showModal, setShowModal] = useRecoilState(modalState)
 
   useEffect(() => {
     setMovie(
-      netflixOriginals[Math.floor(Math.random() * netflixOriginals.length)]
+      movies[Math.floor(Math.random() * movies.length)]
     )
-  }, [netflixOriginals])
+  }, [movies])
 
   return (
     <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">

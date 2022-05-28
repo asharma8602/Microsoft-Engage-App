@@ -2,11 +2,10 @@ import { Movie } from '../typings'
 import Image from 'next/image'
 import { useRecoilState } from 'recoil'
 import { modalState, movieState } from '../atoms/modalAtom'
-// import { useRecoilState } from 'recoil'
-// import { modalState, movieState } from '../atoms/modalAtom.'
+import { DocumentData } from 'firebase/firestore'
 
 interface Props {
-  movie: Movie
+  movie: Movie | DocumentData
 }
 
 function Thumbnail({ movie }: Props) {
@@ -23,7 +22,7 @@ function Thumbnail({ movie }: Props) {
     >
       <Image
         src={`https://image.tmdb.org/t/p/w500${
-          movie.backdrop_path || movie.poster_path
+          movie.backdrop_path || movie.poster_path || '/sH6030EbSzOUTFFZrpnTdSpeNP0.jpg'
         }`}
         className="rounded-sm object-cover md:rounded"
         layout="fill"

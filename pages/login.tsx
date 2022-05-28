@@ -1,11 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { useRef,useState } from 'react'
+import { useState } from 'react'
 import coverPhoto from '../public/cover.png'
-import { useForm, SubmitHandler } from "react-hook-form";
-import useAuth from '../hooks/useAuth';
+import { useForm, SubmitHandler} from 'react-hook-form'
+import useAuth from '../hooks/useAuth'
 
-interface Inputs{
+
+interface Inputs {
   email: string
   password: string
 }
@@ -14,21 +15,18 @@ function login() {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors }
-  } = useForm<Inputs>();
-  const {signIn,signUp}= useAuth()
-  const onSubmit: SubmitHandler<Inputs> = async(data) => {
+    formState: { errors },
+  } = useForm<Inputs>()
+  const { signIn, signUp } = useAuth()
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (login) {
-      await signIn(data.email,data.password)
+      await signIn(data.email, data.password)
+    } else {
+      await signUp(data.email, data.password)
     }
-    else {
-      await signUp(data.email,data.password)
-    }
-  };
+  }
   const [login, setLogin] = useState(false)
-  
-
+  const [account, setAccount] = useState(false)
   return (
     <div className="relative flex h-screen w-screen flex-col bg-black md:items-center md:justify-center md:bg-transparent">
       <Head>
@@ -49,11 +47,19 @@ function login() {
       />
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative mt-24 space-y-8 rounded bg-black/75 py-10 px-6 md:mt-0 md:max-w-md md:px-14">
-        <h1 className="text-4xl font-semibold">Sign In</h1>
+        className="relative mt-24 space-y-8 rounded bg-black/75 py-10 px-6 md:mt-0 md:max-w-md md:px-14"
+      >
+        <h1 className="text-4xl font-semibold">
+          {account ? <>Sign In</> : <>Sign Up</>}
+        </h1>
         <div className="space-y-4">
           <label className="inline-block w-full">
-            <input type="email" placeholder="E-mail ID" className="input" {...register('email', { required: true })} />
+            <input
+              type="email"
+              placeholder="E-mail ID"
+              className="input"
+              {...register('email', { required: true })}
+            />
             {errors.email && (
               <p className="p-1 text-[13px] font-light  text-orange-500">
                 Please enter a valid email.
@@ -61,9 +67,14 @@ function login() {
             )}
           </label>
           <label className="inline-block w-full">
-            <input type="password" placeholder="Password" className="input" {...register('password', { required: true })} />
+            <input
+              type="password"
+              placeholder="Password"
+              className="input"
+              {...register('password', { required: true })}
+            />
             {errors.password && (
-              <p className="p-1 text-[13px] font-light  text-orange-500">
+              <p className="p-1 text-[13px] font-light text-orange-500">
                 Your password must contain between 4 and 60 characters.
               </p>
             )}
@@ -71,18 +82,23 @@ function login() {
         </div>
         <button
           type="submit"
-          className="w-full rounded bg-[#E50914] py-3 font-semibold"
-          onClick={ () => setLogin(true) }>
-          Sign In
+          className="w-full rounded bg-[#12b57f] py-3 font-semibold"
+          onClick={() => {
+            account ? setLogin(true) : register
+          }}
+        >
+          {account ? <>Sign In</> : <>Sign Up</>}
         </button>
         <div className="text-[gray]">
-          New to Now-United?{' '}
+          {account ? <>New to Now-United? </> : <>Already on Now-United? </>}
           <button
             type="submit"
-            className='cursor-pointer text-white hover:underline'
-            onClick={ () => setLogin(true) }
+            className="cursor-pointer text-white hover:underline"
+            onClick={() => {
+              setAccount(!account)
+            }}
           >
-            Sign Up
+            {account ? <>Sign Up</> : <>Sign In</>}
           </button>
         </div>
       </form>

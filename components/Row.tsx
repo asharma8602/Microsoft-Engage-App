@@ -2,13 +2,14 @@ import { Movie } from '../typings'
 import { BsChevronCompactLeft, BsChevronCompactRight } from 'react-icons/bs'
 import Thumbnail from './Thumbnail'
 import { useRef, useState } from 'react'
+import { DocumentData } from '@firebase/firestore'
 
 interface Props {
   title: string
-  movies: Movie[]
+  movies: Movie[] | DocumentData[]
 }
 
-function Row({ title, movies }: Props) {
+function Row({ title, movies }: Props): JSX.Element {
   const rowRef = useRef<HTMLDivElement>(null)
   const [isMoved, setIsMoved] = useState(false)
 
@@ -53,24 +54,5 @@ function Row({ title, movies }: Props) {
     </div>
   )
 }
-
-// function Row({ title, movies }: Props) {
-//   return (
-//     <div className="md:space-z-2 h-40 space-y-0.5">
-//       <h2 className="group relative md:-ml-2">{title}</h2>
-//       <div className="w-56 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
-//         {/* <BsChevronCompactLeft className="absolute top-0 bottom-0 left-2 z-40 m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100" /> */}
-
-//         <div className="flex items-center space-x-0.5 overflow-hidden md:space-x-2.5 md:p-2">
-//           {movies.map((movie) => (
-//             <Thumbnail key={movie.id} movie={movie} />
-//           ))}
-//         </div>
-
-//         {/* <BsChevronCompactRight className="absolute top-0 bottom-0 left-2 z-40 m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100" /> */}
-//       </div>
-//     </div>
-//   )
-// }
 
 export default Row
