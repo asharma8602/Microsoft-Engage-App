@@ -1,3 +1,4 @@
+//Special styles for Tailwind CSS
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',

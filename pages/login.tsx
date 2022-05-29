@@ -5,7 +5,7 @@ import coverPhoto from '../public/cover.png'
 import { useForm, SubmitHandler} from 'react-hook-form'
 import useAuth from '../hooks/useAuth'
 
-
+//types for inputs
 interface Inputs {
   email: string
   password: string
@@ -18,6 +18,7 @@ function login() {
     formState: { errors },
   } = useForm<Inputs>()
   const { signIn, signUp } = useAuth()
+  //Handler to triger functions on basis of login state
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (login) {
       await signIn(data.email, data.password)
@@ -52,6 +53,7 @@ function login() {
         <h1 className="text-4xl font-semibold">
           {account ? <>Sign In</> : <>Sign Up</>}
         </h1>
+        {/* Email Input */}
         <div className="space-y-4">
           <label className="inline-block w-full">
             <input
@@ -66,6 +68,7 @@ function login() {
               </p>
             )}
           </label>
+          {/* Password Input */}
           <label className="inline-block w-full">
             <input
               type="password"

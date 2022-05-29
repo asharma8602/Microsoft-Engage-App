@@ -20,6 +20,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { db } from '../firebase'
 
 function Modal() {
+  // states for different variables
   const [showModal, setShowModal] = useRecoilState(modalState)
   const [movie, setMovie] = useRecoilState(movieState)
   const [trailer, setTrailer] = useState('')
@@ -28,8 +29,9 @@ function Modal() {
   const [addedToFavourites, setAddedToFavourites] = useState(false)
   const [muted, setMuted] = useState(true)
   const [movies, setMovies] = useState<DocumentData[] | Movie[]>([])
-  const [favourites,setFavourites]=useState<DocumentData[] | Movie[]>([])
+  const [favourites, setFavourites] = useState<DocumentData[] | Movie[]>([])
   const { user } = useAuth()
+  //styling used for toast notification
   const toastStyle = {
     background: 'white',
     color: 'black',
@@ -39,6 +41,8 @@ function Modal() {
     borderRadius: '9999px',
     maxWidth: '1000px',
   }
+
+  //fetches the movie details from the API
   useEffect(() => {
     if (!movie) return
 
@@ -65,11 +69,13 @@ function Modal() {
 
     fetchMovie()
   }, [movie])
+  //function to close the modal
   const handleClose = () => {
     setShowModal(false)
     setMovie(null)
     toast.dismiss()
   }
+  //function to add the movie to the list
   useEffect(() => {
     if (user) {
       return onSnapshot(
@@ -78,6 +84,7 @@ function Modal() {
       )
     }
   }, [db, movie?.id])
+  //function to add the movie to the favourites
   useEffect(() => {
     if (user) {
       return onSnapshot(
@@ -86,6 +93,7 @@ function Modal() {
       )
     }
   }, [db, movie?.id])
+  //function to add the movie to the list
   useEffect(
     () =>
       setAddedToList(
@@ -93,6 +101,7 @@ function Modal() {
       ),
     [movies]
   )
+  //function to add the movie to the favourites
   useEffect(
     () =>
       setAddedToFavourites(
@@ -100,6 +109,7 @@ function Modal() {
       ),
     [favourites]
   )
+  //function to manage changes in list
   const handleList = async () => {
     if (addedToList) {
       await deleteDoc(
@@ -130,6 +140,7 @@ function Modal() {
       )
     }
   }
+  //function to manage changes in favourites
   const handleFavourites = async () => {
     if (addedToFavourites) {
       await deleteDoc(
@@ -137,7 +148,9 @@ function Modal() {
       )
 
       toast(
-        `${movie?.title || movie?.original_name} has been removed from My Favourites`,
+        `${
+          movie?.title || movie?.original_name
+        } has been removed from My Favourites`,
         {
           duration: 8000,
           style: toastStyle,
@@ -152,7 +165,9 @@ function Modal() {
       )
 
       toast(
-        `${movie?.title || movie?.original_name} has been added to My Favourites.`,
+        `${
+          movie?.title || movie?.original_name
+        } has been added to My Favourites.`,
         {
           duration: 8000,
           style: toastStyle,
@@ -168,7 +183,8 @@ function Modal() {
       className="no-scrollbar fixed !top-7 left-0 right-0 z-50 mx-auto w-full max-w-5xl overflow-hidden overflow-y-scroll rounded-md"
     >
       <>
-      <Toaster position="bottom-center" />
+        <Toaster position="bottom-center" />
+        {/* Close Button */}
         <button
           className="modalButton absolute right-5 top-5 !z-40 h-9 w-9 border-none bg-[#181818] hover:bg-[#181818]"
           onClick={handleClose}
@@ -176,6 +192,7 @@ function Modal() {
           <BiX className="h-6 w-6" />
         </button>
         <div className="relative pt-[56.25%]">
+          {/* Video Player */}
           <ReactPlayer
             url={`https://www.youtube.com/watch?v=${trailer}`}
             width="100%"
@@ -191,6 +208,7 @@ function Modal() {
                 <FiPlay className="h-6 w-6 text-black" />
                 Play
               </button>
+              {/* Add to List Button */}
               <button className="modalButton" onClick={handleList}>
                 {addedToList ? (
                   <BiCheck className="h-7 w-7" />
@@ -198,14 +216,16 @@ function Modal() {
                   <FiPlus className="h-7 w-7" />
                 )}
               </button>
+              {/* Add to Favourites Button */}
               <button className="modalButton" onClick={handleFavourites}>
-              {addedToFavourites ? (
+                {addedToFavourites ? (
                   <BsFillHandThumbsUpFill className="h-7 w-7" />
                 ) : (
                   <BsHandThumbsUp className="h-7 w-7" />
                 )}
               </button>
             </div>
+            {/* Mute Unmute Button */}
             <button className="modalButton" onClick={() => setMuted(!muted)}>
               {muted ? (
                 <BiVolumeMute className="h-6 w-6" />

@@ -20,6 +20,7 @@ function Thumbnail({ movie }: Props) {
         setShowModal(true)
       }}
     >
+      {/* Thumbnail Image */}
       <Image
         src={`https://image.tmdb.org/t/p/w500${
           movie.backdrop_path || movie.poster_path || '/sH6030EbSzOUTFFZrpnTdSpeNP0.jpg'

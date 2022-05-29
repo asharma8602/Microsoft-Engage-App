@@ -1,3 +1,4 @@
+//Type definitions for typescript-eslint v2.0.0
 export interface Genre {
     id: number
     name: string

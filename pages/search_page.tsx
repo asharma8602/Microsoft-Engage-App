@@ -20,11 +20,12 @@ function search_page() {
   const rowRef = useRef<HTMLDivElement>(null)
   const [result, setResult] = useState<Movie[]>([])
   const router = useRouter()
+  //getting query from search bar
   const searchQuery =
     router && router.query && router.query && router.query.searchQuery
       ? router.query.searchQuery
       : ''
-
+  //fetching search results
   useEffect(() => {
     axios
       .get(

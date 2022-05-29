@@ -10,6 +10,7 @@ function Header() {
   const searchRef = useRef()
   const router = useRouter()
 
+  // Scroll event
   useEffect(() => {
     const onOutsideClick = (e: any) =>
       // @ts-ignore
@@ -20,7 +21,7 @@ function Header() {
 
     return () => document.removeEventListener('click', onOutsideClick)
   }, [])
-
+  // Scroll event
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -37,6 +38,7 @@ function Header() {
     }
   }, [])
 
+
   return (
     <header className={`${isScrolled && 'bg-[#141414]'}`}>
       <div className="flex items-center space-x-2 md:space-x-10">
@@ -49,6 +51,7 @@ function Header() {
           <li className="headerLink">Home</li>
         </ul>
       </div>
+      {/* Search bar */}
       <div className="flex items-center space-x-4 md:space-x-10">
         <div className={`relative` || `mr-3` || `${isActive ? 'active' : ''}`}>
           <div
@@ -80,6 +83,7 @@ function Header() {
               <path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"></path>
             </svg>
           </div>
+          {/* Search input */}
           <input
             type="text"
             className="w-70 block rounded-lg border bg-transparent p-2 pl-10 text-white"
@@ -100,6 +104,7 @@ function Header() {
             }}
           />
         </div>
+        {/* Logout button and Kids button */}
         <p
           className="headerLink hidden lg:inline"
           onClick={() => router.push('/kids')}

@@ -7,6 +7,7 @@ import { BiInfoCircle} from 'react-icons/bi'
 import { modalState, movieState } from '../atoms/modalAtom'
 import { useRecoilState } from 'recoil'
 
+//Props for passing into the component
 interface Props {
   movies: Movie[]
 }
@@ -15,7 +16,7 @@ function Banner({ movies }: Props) {
   const [movie, setMovie] = useState<Movie | null>(null)
   const [currentMovie, setCurrentMovie] = useRecoilState(movieState)
   const [showModal, setShowModal] = useRecoilState(modalState)
-
+  //obataining random movies
   useEffect(() => {
     setMovie(
       movies[Math.floor(Math.random() * movies.length)]
@@ -37,12 +38,13 @@ function Banner({ movies }: Props) {
       <p className="max-w-xs text-shadow-md truncate text-xs md:max-w-lg md:text-lg lg:max-w-2xl lg:text-2xl">
         {movie?.overview}
       </p>
-
+      {/* Play Button */}
       <div className="flex space-x-2">
         <button className="bannerButton bg-white text-black">
           <FiPlay />
           Play
         </button>
+        {/* More Info Button to triger Modal */}
         <button
           className="bannerButton bg-[gray]/70"
           onClick={() => {

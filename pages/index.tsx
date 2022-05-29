@@ -22,6 +22,7 @@ import axios from 'axios'
 import useFavourites from '../hooks/useFavourites'
 import _ from 'lodash'
 
+// imported types
 interface Props {
   netflixOriginals: Movie[]
   trendingNow: Movie[]
@@ -55,7 +56,7 @@ const Home = ({
     []
   )
   if (loading) return null
-  
+  // fetching user-preferred Genres
   useEffect(() => {
     if (user) {
       return onSnapshot(
@@ -75,6 +76,8 @@ const Home = ({
       )
     }
   }, [db])
+
+  //Shuffling the recommendations
   function shuffle(array: DocumentData[] | Movie[]): DocumentData[] | Movie[] {
     let currentIndex = array.length,
       randomIndex
@@ -95,7 +98,9 @@ const Home = ({
     return array
   }
 
+  // fetching recommendations
   useEffect(() => {
+    //favourites length condition
     if (favourites.length <= 3) {
       {
         genres.map((genre) => {
@@ -142,11 +147,13 @@ const Home = ({
 
   return (
     <div className="relative h-screen bg-gradient-to-b from-gray-900/10 to-[#010511] lg:h-[140vh]">
+      {/* MetaData */}
       <Head>
         <title>Engage App</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
       <Header />
+      {/* Row Components */}
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
         <Banner movies={netflixOriginals} />
         <section className="space-y-24">
@@ -179,6 +186,8 @@ const Home = ({
 
 export default Home
 
+
+//Server Side Rendering
 export const getServerSideProps = async () => {
   const [
     netflixOriginals,

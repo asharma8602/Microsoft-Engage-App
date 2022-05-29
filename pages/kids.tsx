@@ -12,7 +12,7 @@ function kids() {
   const showModal = useRecoilValue(modalState)
   const rowRef = useRef<HTMLDivElement>(null)
   const [kid, setKid] = useState<Movie[]>([])
-
+  //axios call for Kids rated movies
   useEffect(() => {
     axios
       .get(
@@ -50,16 +50,3 @@ function kids() {
 }
 
 export default kids
-
-// export const getServerSideProps = async () => {
-//   const [Kids] = await Promise.all([
-//     fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.NEXT_PUBLIC_API_KEY}a80f4351a37f1534cfc62363fbbe8382&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=10751&with_watch_monetization_types=flatrate`
-//     ).then((res) => res.json()),
-//   ])
-
-//   return {
-//     props: {
-//       Kids: Kids.results,
-//     },
-//   }
-// }

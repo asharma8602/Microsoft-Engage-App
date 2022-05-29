@@ -12,7 +12,8 @@ interface Props {
 function Row({ title, movies }: Props): JSX.Element {
   const rowRef = useRef<HTMLDivElement>(null)
   const [isMoved, setIsMoved] = useState(false)
-
+  
+  //Scroll handler to manage scroll button states and movement on scroll
   const handleClick = (direction: string) => {
     setIsMoved(true)
     if (rowRef.current) {
@@ -32,6 +33,7 @@ function Row({ title, movies }: Props): JSX.Element {
         {title}
       </h2>
       <div className="group relative md:-ml-2">
+        {/* Left Button */}
         <BsChevronCompactLeft
           className={`absolute top-0 bottom-0 left-2 z-40 m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100 ${
             !isMoved && 'hidden'
@@ -46,6 +48,7 @@ function Row({ title, movies }: Props): JSX.Element {
             <Thumbnail key={movie.id} movie={movie} />
           ))}
         </div>
+        {/* Right Button */}
         <BsChevronCompactRight
           className="absolute top-0 bottom-0 right-2 z-40 m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100"
           onClick={() => handleClick('right')}
